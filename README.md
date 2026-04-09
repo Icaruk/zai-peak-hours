@@ -52,9 +52,8 @@ Once configured, the plugin automatically:
 You can also manually check the peak hours status at any time using:
 
 - `/peak_hours` - Display current peak hours status
-- `/ph` - Alias for `/peak_hours`
 
-These commands will show the same information as the automatic toast notifications.
+This command will show the same information as the automatic toast notifications.
 
 ## Messages
 

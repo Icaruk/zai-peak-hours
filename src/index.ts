@@ -49,8 +49,7 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
       description: 'Display current peak hours status and time until next transition',
       category: 'Utilities',
       slash: {
-        name: 'peak_hours',
-        aliases: ['ph']
+        name: 'peak_hours'
       },
       onSelect: () => {
         showPeakHoursToast(api);
