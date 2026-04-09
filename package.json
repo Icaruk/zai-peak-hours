@@ -1,0 +1,40 @@
+{
+	"name": "@icaruk/opencode-peak-hours",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "OpenCode plugin to display peak hours information with automatic timezone detection",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"tui": "dist/index.js",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"prepublishOnly": "npm run build"
+	},
+	"keywords": [
+		"opencode",
+		"plugin",
+		"peak-hours",
+		"timezone",
+		"cli"
+	],
+	"author": "Icaruk",
+	"license": "MIT",
+	"dependencies": {
+		"@opencode-ai/plugin": "^1.4.0",
+		"dayjs": "^1.11.10"
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"typescript": "^5.0.0"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Icaruk/zai-peak-hours.git"
+	}
+}
