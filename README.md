@@ -1,4 +1,4 @@
-# @icauk/opencode-peak-hours
+# opencode-peak-hours
 
 OpenCode plugin to display peak hours information with automatic timezone detection.
 
@@ -7,16 +7,15 @@ OpenCode plugin to display peak hours information with automatic timezone detect
 - 🌍 Automatic timezone detection
 - ⏰ Real-time peak hours status (14:00-18:00 UTC+8)
 - 📊 Time remaining until next peak/off-peak transition
-- 🔔 Toast notifications on session start and every 15 minutes
+- 🔔 Toast notifications on session start and every 15 minutes (configurable)
 - ⚙️ Configurable enable/disable and update intervals
-- 🎯 Smart message formatting
 
 ## Installation
 
 Install the plugin globally for OpenCode:
 
 ```bash
-npm install -g @icauk/opencode-peak-hours
+npm install -g @icaruk/opencode-peak-hours
 ```
 
 ## Configuration
@@ -67,33 +66,6 @@ Currently in off-peak hours. X hours Y minutes remaining
 - **Peak Hours**: 14:00-18:00 UTC+8 (Asia/Shanghai timezone)
 - **Off-Peak Hours**: All other times
 - **Rate Multipliers**: 3x during peak hours, 2x during off-peak hours
-
-## Development
-
-### Build
-
-```bash
-npm run build
-```
-
-### Watch Mode
-
-```bash
-npm run dev
-```
-
-### Files Structure
-
-```
-src/
-├── index.ts          # Main plugin entry point
-├── peak-hours.ts     # Peak hours calculation logic
-└── config.ts         # Configuration handling
-```
-
-## License
-
-MIT
 
 ## Contributing
 
