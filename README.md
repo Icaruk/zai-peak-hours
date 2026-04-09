@@ -47,6 +47,15 @@ Once configured, the plugin automatically:
 2. Updates every 15 minutes with time remaining until the next transition
 3. Uses your local timezone for accurate time calculations
 
+### Commands
+
+You can also manually check the peak hours status at any time using:
+
+- `/peak_hours` - Display current peak hours status
+- `/ph` - Alias for `/peak_hours`
+
+These commands will show the same information as the automatic toast notifications.
+
 ## Messages
 
 The plugin displays messages in the following format:

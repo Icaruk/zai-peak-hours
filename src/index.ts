@@ -42,6 +42,22 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
     }, updateInterval);
   });
 
+  api.command.register(() => [
+    {
+      title: 'Show Peak Hours Status',
+      value: 'peak_hours',
+      description: 'Display current peak hours status and time until next transition',
+      category: 'Utilities',
+      slash: {
+        name: 'peak_hours',
+        aliases: ['ph']
+      },
+      onSelect: () => {
+        showPeakHoursToast(api);
+      }
+    }
+  ]);
+
   api.lifecycle.onDispose(() => {
     unsubscribe();
     if (timerId) {
