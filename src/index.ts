@@ -30,18 +30,6 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
   const updateIntervalMinutes = peakHoursConfig.updateIntervalMinutes !== undefined ? peakHoursConfig.updateIntervalMinutes : DEFAULT_CONFIG.updateIntervalMinutes;
   const updateInterval = updateIntervalMinutes * 60 * 1000; // Convert minutes to milliseconds
   
-  if (!enabled) {
-    return;
-  }
-
-  const unsubscribe = api.event.on('session.created', () => {
-    showPeakHoursToast(api);
-    
-    timerId = setInterval(() => {
-      showPeakHoursToast(api);
-    }, updateInterval);
-  });
-
   api.command.register(() => [
     {
       title: 'Show Peak Hours Status',
@@ -56,6 +44,18 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
       }
     }
   ]);
+  
+  if (!enabled) {
+    return;
+  }
+
+  const unsubscribe = api.event.on('session.created', () => {
+    showPeakHoursToast(api);
+    
+    timerId = setInterval(() => {
+      showPeakHoursToast(api);
+    }, updateInterval);
+  });
 
   api.lifecycle.onDispose(() => {
     unsubscribe();
