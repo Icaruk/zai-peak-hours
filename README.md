@@ -1,65 +1,37 @@
-# opencode-peak-hours
+# @icaruk/zai-peak-hours
 
-OpenCode plugin to display peak hours information with automatic timezone detection.
-
-## Features
-
-- 🌍 Automatic timezone detection
-- ⏰ Real-time peak hours status (14:00-18:00 UTC+8)
-- 📊 Time remaining until next peak/off-peak transition
-- 🔔 Toast notifications on session start and every 15 minutes (configurable)
-- ⚙️ Configurable enable/disable and update intervals
+OpenCode TUI plugin that displays z.ai peak hours information with automatic timezone detection via toast notifications.
 
 ## Installation
 
-Install the plugin globally for OpenCode:
+Add to your `~/.config/opencode/tui.json`:
 
-```bash
-npm install -g @icaruk/opencode-peak-hours
-```
-
-## Configuration
-
-Add the plugin to your OpenCode configuration file (`~/.config/opencode/opencode.jsonc`):
-
-```jsonc
+```json
 {
-  "plugin": [
-    "@icaruk/opencode-peak-hours@latest"
-  ],
-  "peakHours": {
-    "enabled": true,
-    "updateIntervalMinutes": 15
-  }
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": ["@icaruk/zai-peak-hours"]
 }
 ```
 
-### Configuration Options
+## Features
 
-- `enabled` (boolean, default: `true`) - Enable or disable the plugin
-- `updateIntervalMinutes` (number, default: `15`) - Update interval in minutes
+- 🌍 Automatic timezone detection (UTC+8 / Asia/Shanghai)
+- ⏰ Real-time peak hours status (14:00-18:00 UTC+8)
+- 📊 Time remaining until next peak/off-peak transition
+- 🔔 Toast notifications on session start and periodic updates
+- ⚙️ Configurable update interval
+- 🛠️ Manual commands for on-demand status checks
 
-## Usage
-
-Once configured, the plugin automatically:
-
-1. Shows a toast message on session start indicating current peak hours status
-2. Updates every 15 minutes with time remaining until the next transition
-3. Uses your local timezone for accurate time calculations
-
-### Commands
-
-You can also manually check the peak hours status at any time using:
+## Commands
 
 - `/peak_hours` - Display current peak hours status
-
-This command will show the same information as the automatic toast notifications.
+- `/peak_hours_status` - Display plugin diagnostics and configuration
 
 ## Messages
 
-The plugin displays messages in the following format:
+The plugin displays toast notifications:
 
-**Peak Hours (14:00-18:00 UTC+8):**
+**Peak Hours:**
 ```
 Currently in peak hours. X hours Y minutes remaining
 ```
@@ -69,12 +41,38 @@ Currently in peak hours. X hours Y minutes remaining
 Currently in off-peak hours. X hours Y minutes remaining
 ```
 
-## Peak Hours Schedule
+## Development
 
-- **Peak Hours**: 14:00-18:00 UTC+8 (Asia/Shanghai timezone)
-- **Off-Peak Hours**: All other times
-- **Rate Multipliers**: 3x during peak hours, 2x during off-peak hours
+```bash
+# Clone
+git clone https://github.com/Icaruk/zai-peak-hours.git
+cd zai-peak-hours
 
-## Contributing
+# Install
+npm install
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+# Build
+npm run build
+
+# Watch
+npm run dev
+```
+
+Add local config in `tui.json`
+
+```json
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": [
+    "D:/Dev/zai-peak-hours/dist/index.js"
+  ]
+}
+```
+
+## npm package
+
+https://www.npmjs.com/package/@icaruk/zai-peak-hours
+
+## License
+
+MIT

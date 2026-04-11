@@ -1,17 +1,50 @@
 import type { TuiPluginApi, TuiPluginMeta } from '../node_modules/@opencode-ai/plugin/dist/tui';
 import type { PluginOptions } from '@opencode-ai/plugin';
 import { getPeakHoursStatus, formatPeakHoursMessage } from './peak-hours';
-import { DEFAULT_CONFIG } from './config';
+import { DEFAULT_CONFIG, type PluginConfig } from './config';
+import * as fs from 'fs';
+import * as path from 'path';
 
 let timerId: NodeJS.Timeout | null = null;
 let pluginLoaded = false;
+let configCache: PluginConfig | null = null;
+
+function getConfigPath(): string {
+  const configDir = process.env.XDG_CONFIG_HOME 
+    ? path.join(process.env.XDG_CONFIG_HOME, 'opencode')
+    : path.join(process.env.HOME || process.env.USERPROFILE || '', '.config', 'opencode');
+  return path.join(configDir, 'peak-hours.json');
+}
+
+function loadConfig(): PluginConfig {
+  if (configCache) {
+    return configCache;
+  }
+
+  const configPath = getConfigPath();
+
+  if (fs.existsSync(configPath)) {
+    try {
+      const configContent = fs.readFileSync(configPath, 'utf-8');
+      const userConfig = JSON.parse(configContent);
+      configCache = {
+        enabled: userConfig.enabled !== undefined ? userConfig.enabled : DEFAULT_CONFIG.enabled,
+        updateIntervalMinutes: userConfig.updateIntervalMinutes !== undefined ? userConfig.updateIntervalMinutes : DEFAULT_CONFIG.updateIntervalMinutes
+      };
+      return configCache;
+    } catch (error) {
+      console.error('Error loading peak-hours config:', error);
+    }
+  }
+
+  configCache = DEFAULT_CONFIG;
+  return configCache;
+}
 
 function showPeakHoursToast(api: TuiPluginApi): void {
-  const tuiConfig = api.tuiConfig;
-  const peakHoursConfig = (tuiConfig as any).peakHours || {};
-  const enabled = peakHoursConfig.enabled !== undefined ? peakHoursConfig.enabled : DEFAULT_CONFIG.enabled;
+  const config = loadConfig();
   
-  if (!enabled) {
+  if (!config.enabled) {
     api.ui.toast({
       message: 'Peak Hours plugin is disabled in config',
       duration: 3000
@@ -29,19 +62,15 @@ function showPeakHoursToast(api: TuiPluginApi): void {
 }
 
 function showDiagnostics(api: TuiPluginApi): void {
-  const tuiConfig = api.tuiConfig;
-  const peakHoursConfig = (tuiConfig as any).peakHours || {};
-  const enabled = peakHoursConfig.enabled !== undefined ? peakHoursConfig.enabled : DEFAULT_CONFIG.enabled;
-  const updateIntervalMinutes = peakHoursConfig.updateIntervalMinutes !== undefined ? peakHoursConfig.updateIntervalMinutes : DEFAULT_CONFIG.updateIntervalMinutes;
-  
+  const config = loadConfig();
   const status = getPeakHoursStatus();
   const currentTime = new Date().toISOString();
   
   const diagnostics = [
     '=== Peak Hours Plugin Diagnostics ===',
     `Plugin loaded: ${pluginLoaded}`,
-    `Plugin enabled: ${enabled}`,
-    `Update interval: ${updateIntervalMinutes} minutes`,
+    `Plugin enabled: ${config.enabled}`,
+    `Update interval: ${config.updateIntervalMinutes} minutes`,
     `Current time: ${currentTime}`,
     `In peak hours: ${status.inPeakHours}`,
     `Time until ${status.transitionType}: ${status.timeUntilTransition}`,
@@ -54,14 +83,10 @@ function showDiagnostics(api: TuiPluginApi): void {
   });
 }
 
-export async function tui(api: TuiPluginApi, options: PluginOptions | undefined, meta: TuiPluginMeta): Promise<void> {
+async function tui(api: TuiPluginApi, options: PluginOptions | undefined, meta: TuiPluginMeta): Promise<void> {
   pluginLoaded = true;
-  
-  const tuiConfig = api.tuiConfig;
-  const peakHoursConfig = (tuiConfig as any).peakHours || {};
-  const enabled = peakHoursConfig.enabled !== undefined ? peakHoursConfig.enabled : DEFAULT_CONFIG.enabled;
-  const updateIntervalMinutes = peakHoursConfig.updateIntervalMinutes !== undefined ? peakHoursConfig.updateIntervalMinutes : DEFAULT_CONFIG.updateIntervalMinutes;
-  const updateInterval = updateIntervalMinutes * 60 * 1000; // Convert minutes to milliseconds
+  const config = loadConfig();
+  const updateInterval = config.updateIntervalMinutes * 60 * 1000; // Convert minutes to milliseconds
   
   // Show plugin loaded message
   api.ui.toast({
@@ -105,7 +130,7 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
     });
   }
   
-  if (!enabled) {
+  if (!config.enabled) {
     return;
   }
 
@@ -126,3 +151,10 @@ export async function tui(api: TuiPluginApi, options: PluginOptions | undefined,
     pluginLoaded = false;
   });
 }
+
+const plugin = {
+  id: "icaruk.peak-hours",
+  tui
+};
+
+export default plugin;
