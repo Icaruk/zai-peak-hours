@@ -4,6 +4,9 @@ OpenCode plugin that displays z.ai peak hours information with automatic timezon
 
 https://docs.z.ai/devpack/overview#usage-instruction#:~:text=peak%20hours%20are
 
+<img width="659" height="133" alt="image" src="https://github.com/user-attachments/assets/a9594e05-99a1-4b64-aad8-5c567515e564" />
+<img width="653" height="131" alt="image" src="https://github.com/user-attachments/assets/bddec7b9-70f4-4807-95f6-eb2b983bbfe4" />
+
 ## Features
 
 - 🌍 Automatic timezone detection (UTC+8 / Asia/Shanghai)
