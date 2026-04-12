@@ -1,44 +1,43 @@
 # @icaruk/zai-peak-hours
 
-OpenCode TUI plugin that displays z.ai peak hours information with automatic timezone detection via toast notifications.
-
-## Installation
-
-Add to your `~/.config/opencode/tui.json`:
-
-```json
-{
-  "$schema": "https://opencode.ai/tui.json",
-  "plugin": ["@icaruk/zai-peak-hours"]
-}
-```
+OpenCode plugin that displays z.ai peak hours information with automatic timezone detection.
 
 ## Features
 
 - 🌍 Automatic timezone detection (UTC+8 / Asia/Shanghai)
 - ⏰ Real-time peak hours status (14:00-18:00 UTC+8)
 - 📊 Time remaining until next peak/off-peak transition
-- 🔔 Toast notifications on session start and periodic updates
-- ⚙️ Configurable update interval
-- 🛠️ Manual commands for on-demand status checks
+- 💬 Zero-token usage slash commands (`/peak_hours`, `/peak_hours_status`) - no LLM invocation
+
+## Installation
+
+Add to your `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "plugin": ["@icaruk/zai-peak-hours"]
+}
+```
+
+Restart OpenCode to load the plugin.
 
 ## Commands
 
+Commands are automatically available after plugin installation:
+
 - `/peak_hours` - Display current peak hours status
-- `/peak_hours_status` - Display plugin diagnostics and configuration
+- `/peak_hours_status` - Display plugin diagnostics and configuration status
 
-## Messages
+These commands execute locally without invoking LLM (zero token usage) via `command.execute.before` hook.
 
-The plugin displays toast notifications:
+## Configuration
 
-**Peak Hours:**
-```
-Currently in peak hours. X hours Y minutes remaining
-```
+Optional configuration file at `~/.config/opencode/peak-hours.json`:
 
-**Off-Peak Hours:**
-```
-Currently in off-peak hours. X hours Y minutes remaining
+```json
+{
+  "enabled": true
+}
 ```
 
 ## Development
@@ -58,13 +57,12 @@ npm run build
 npm run dev
 ```
 
-Add local config in `tui.json`
+Add local config in `opencode.json`:
 
 ```json
 {
-  "$schema": "https://opencode.ai/tui.json",
   "plugin": [
-    "D:/Dev/zai-peak-hours/dist/index.js"
+    "file:///D:/Dev/zai-peak-hours/dist/index.js"
   ]
 }
 ```

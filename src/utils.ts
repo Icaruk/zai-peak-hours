@@ -1,10 +1,3 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc.js';
-import timezone from 'dayjs/plugin/timezone.js';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
 export interface PeakHoursStatus {
   inPeakHours: boolean;
   timeUntilTransition: string;
@@ -15,31 +8,37 @@ export function getPeakHoursStatus(): PeakHoursStatus {
   const peakHoursStart = 14;
   const peakHoursEnd = 18;
 
-  const currentTime = dayjs().utc().utcOffset(8);
-  const currentHour = currentTime.hour();
+  // Calcular hora actual en UTC+8 (China timezone)
+  const now = new Date();
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+  const chinaTime = new Date(utcMs + 8 * 3600000);
+  const currentHour = chinaTime.getHours();
 
   let inPeakHours: boolean;
-  let transitionTime: dayjs.Dayjs;
+  let transitionTime: Date;
   let transitionType: 'start' | 'end';
 
   if (currentHour >= peakHoursStart && currentHour < peakHoursEnd) {
     inPeakHours = true;
     transitionType = 'end';
-    transitionTime = currentTime.hour(peakHoursEnd).minute(0).second(0);
+    transitionTime = new Date(chinaTime);
+    transitionTime.setHours(peakHoursEnd, 0, 0, 0);
   } else {
     inPeakHours = false;
     transitionType = 'start';
     
-    const transitionDay = currentHour >= peakHoursEnd 
-      ? currentTime.add(1, 'day') 
-      : currentTime;
+    let transitionDay = new Date(chinaTime);
+    if (currentHour >= peakHoursEnd) {
+      transitionDay.setDate(transitionDay.getDate() + 1);
+    }
     
-    transitionTime = transitionDay.hour(peakHoursStart).minute(0).second(0);
+    transitionDay.setHours(peakHoursStart, 0, 0, 0);
+    transitionTime = transitionDay;
   }
 
-  const diff = transitionTime.diff(currentTime);
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const diffMs = transitionTime.getTime() - chinaTime.getTime();
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
   let timeUntilTransition: string;
   if (hours > 0 && minutes > 0) {
