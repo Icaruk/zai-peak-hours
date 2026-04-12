@@ -2,12 +2,14 @@
 
 OpenCode plugin that displays z.ai peak hours information with automatic timezone detection.
 
+https://docs.z.ai/devpack/overview#usage-instruction#:~:text=peak%20hours%20are
+
 ## Features
 
 - 🌍 Automatic timezone detection (UTC+8 / Asia/Shanghai)
 - ⏰ Real-time peak hours status (14:00-18:00 UTC+8)
 - 📊 Time remaining until next peak/off-peak transition
-- 💬 Zero-token usage slash commands (`/peak_hours`, `/peak_hours_status`) - no LLM invocation
+- 💬 Zero-token slash commands (`/peak_hours`) - no LLM invocation
 
 ## Installation
 
@@ -26,9 +28,8 @@ Restart OpenCode to load the plugin.
 Commands are automatically available after plugin installation:
 
 - `/peak_hours` - Display current peak hours status
-- `/peak_hours_status` - Display plugin diagnostics and configuration status
 
-These commands execute locally without invoking LLM (zero token usage) via `command.execute.before` hook.
+This command executes locally without invoking LLM (zero token usage) via `command.execute.before` hook.
 
 ## Configuration
 
